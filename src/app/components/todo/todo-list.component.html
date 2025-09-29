@@ -1,0 +1,127 @@
+<div class="todo-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <h1>My Todos</h1>
+      <div class="user-info" *ngIf="currentUser">
+        <span
+          >Welcome, {{ currentUser.firstName }}
+          {{ currentUser.lastName }}!</span
+        >
+        <button class="btn btn-outline" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn btn-primary" (click)="createNewTodo()">
+      <span class="icon">+</span>
+      Add New Todo
+    </button>
+    <div class="stats">
+      <span>Total: {{ totalItems }} todos</span>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+    <button class="btn btn-link" (click)="loadTodos()">Retry</button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading todos...</p>
+  </div>
+
+  <!-- Todos Table -->
+  <div *ngIf="!loading && todos.length > 0" class="todos-table-container">
+    <table class="todos-table">
+      <thead>
+        <tr>
+          <th class="status-col">Status</th>
+          <th class="todo-col">Todo</th>
+          <th class="user-col">User ID</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let todo of todos" [class.completed]="todo.completed">
+          <td class="status-col">
+            <label class="checkbox-container">
+              <input
+                type="checkbox"
+                [checked]="todo.completed"
+                (change)="toggleTodoStatus(todo)"
+              />
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td class="todo-col">
+            <span [class.strike-through]="todo.completed">{{ todo.todo }}</span>
+          </td>
+          <td class="user-col">{{ todo.userId || "N/A" }}</td>
+          <td class="actions-col">
+            <button
+              class="btn btn-sm btn-outline"
+              (click)="editTodo(todo)"
+              title="Edit Todo"
+            >
+              Edit
+            </button>
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="deleteTodo(todo)"
+              title="Delete Todo"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && todos.length === 0 && !error" class="empty-state">
+    <div class="empty-icon">📝</div>
+    <h3>No todos found</h3>
+    <p>Start by creating your first todo!</p>
+    <button class="btn btn-primary" (click)="createNewTodo()">
+      Create Todo
+    </button>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && totalPages > 1" class="pagination">
+    <button
+      class="btn btn-outline"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      Previous
+    </button>
+
+    <div class="page-numbers">
+      <button
+        *ngFor="let page of pages"
+        class="btn"
+        [class.btn-primary]="page === currentPage"
+        [class.btn-outline]="page !== currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+    </div>
+
+    <button
+      class="btn btn-outline"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      Next
+    </button>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>Todo App Login</h2>
+      <p>Sign in to manage your todos</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-control"
+          [class.is-invalid]="submitted && f.username.errors"
+        />
+        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+          <div *ngIf="f.username.errors.required">Username is required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          [class.is-invalid]="submitted && f.password.errors"
+        />
+        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+          <div *ngIf="f.password.errors.required">Password is required</div>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <div class="form-actions">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="btn btn-primary btn-block"
+        >
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? "Signing In..." : "Sign In" }}
+        </button>
+      </div>
+    </form>
+
+    <div class="demo-credentials">
+      <p>Demo Credentials:</p>
+      <button
+        type="button"
+        class="btn btn-link"
+        (click)="fillSampleCredentials()"
+      >
+        Use Sample Login (emilys / emilyspass)
+      </button>
+    </div>
+  </div>
+</div>

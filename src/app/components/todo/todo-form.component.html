@@ -1,0 +1,107 @@
+<div class="todo-form-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <h1>{{ pageTitle }}</h1>
+      <div class="breadcrumb">
+        <a routerLink="/todos" class="breadcrumb-link">Todos</a>
+        <span class="breadcrumb-separator">></span>
+        <span class="breadcrumb-current">{{
+          isEditMode ? "Edit" : "Create"
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="form-card">
+    <form [formGroup]="todoForm" (ngSubmit)="onSubmit()" class="todo-form">
+      <!-- Todo Text Field -->
+      <div class="form-group">
+        <label for="todo" class="form-label">
+          Todo Description <span class="required">*</span>
+        </label>
+        <textarea
+          id="todo"
+          formControlName="todo"
+          class="form-control"
+          [class.is-invalid]="submitted && f.todo.errors"
+          placeholder="Enter your todo description..."
+          rows="4"
+          maxlength="200"
+        >
+        </textarea>
+        <div class="char-count">
+          {{ f.todo.value?.length || 0 }}/200 characters
+        </div>
+        <div *ngIf="submitted && f.todo.errors" class="invalid-feedback">
+          <div *ngIf="f.todo.errors.required">Todo description is required</div>
+          <div *ngIf="f.todo.errors.minlength">
+            Todo description must be at least 3 characters
+          </div>
+          <div *ngIf="f.todo.errors.maxlength">
+            Todo description cannot exceed 200 characters
+          </div>
+        </div>
+      </div>
+
+      <!-- Completed Status -->
+      <div class="form-group">
+        <label class="checkbox-container">
+          <input
+            type="checkbox"
+            formControlName="completed"
+            class="checkbox-input"
+          />
+          <span class="checkmark"></span>
+          <span class="checkbox-label">Mark as completed</span>
+        </label>
+        <div class="form-help">
+          Check this box if the todo is already completed
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <!-- Loading Spinner -->
+      <div *ngIf="loading && !error" class="loading-container">
+        <div class="spinner"></div>
+        <p>{{ isEditMode ? "Updating todo..." : "Creating todo..." }}</p>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-outline"
+          (click)="cancel()"
+          [disabled]="loading"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          [disabled]="loading || todoForm.invalid"
+          class="btn btn-primary"
+        >
+          <span *ngIf="loading" class="button-spinner"></span>
+          {{ submitButtonText }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Form Tips -->
+  <div class="tips-card">
+    <h3>💡 Tips for writing good todos:</h3>
+    <ul>
+      <li>Be specific and actionable</li>
+      <li>Use action verbs (e.g., "Call", "Write", "Review")</li>
+      <li>Include relevant details or deadlines</li>
+      <li>Keep it concise but descriptive</li>
+    </ul>
+  </div>
+</div>
